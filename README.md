@@ -49,7 +49,7 @@ mvn package -DskipTests
 java -cp target/classes com.banking.Main
 ```
 
-The project targets Java 21 bytecode and can be compiled with a newer JDK.
+The project targets Java 25 bytecode and should be compiled with JDK 25.
 
 ## JDBC + MySQL
 
