@@ -1,0 +1,34 @@
+{
+  "info": {
+    "name": "Internet Banking API",
+    "description": "Requests for the Spring Boot Internet Banking REST API. Set baseUrl, email, and password variables before using protected requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "email", "value": "user@example.com" },
+    { "key": "password", "value": "" },
+    { "key": "accountNumber", "value": "AC001" },
+    { "key": "beneficiaryId", "value": "1" }
+  ],
+  "item": [
+    { "name": "Register", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}" }, "url": "{{baseUrl}}/api/auth/register" } },
+    { "name": "Login", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}" }, "url": "{{baseUrl}}/api/auth/login" } },
+    { "name": "My profile", "request": { "method": "GET", "auth": { "type": "basic", "basic": [{ "key": "username", "value": "{{email}}", "type": "string" }, { "key": "password", "value": "{{password}}", "type": "string" }] }, "url": "{{baseUrl}}/api/auth/me" } },
+    { "name": "My accounts", "request": { "method": "GET", "auth": { "type": "basic", "basic": [{ "key": "username", "value": "{{email}}", "type": "string" }, { "key": "password", "value": "{{password}}", "type": "string" }] }, "url": "{{baseUrl}}/api/accounts/my" } },
+    { "name": "Create account", "request": { "method": "POST", "auth": { "type": "basic", "basic": [{ "key": "username", "value": "{{email}}", "type": "string" }, { "key": "password", "value": "{{password}}", "type": "string" }] }, "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"accountNumber\": \"AC001\",\n  \"accountType\": \"SAVINGS\"\n}" }, "url": "{{baseUrl}}/api/accounts" } },
+    { "name": "Get account", "request": { "method": "GET", "auth": { "type": "basic", "basic": [{ "key": "username", "value": "{{email}}", "type": "string" }, { "key": "password", "value": "{{password}}", "type": "string" }] }, "url": "{{baseUrl}}/api/accounts/{{accountNumber}}" } },
+    { "name": "Deposit", "request": { "method": "POST", "auth": { "type": "basic", "basic": [{ "key": "username", "value": "{{email}}", "type": "string" }, { "key": "password", "value": "{{password}}", "type": "string" }] }, "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"amount\": 100.00\n}" }, "url": "{{baseUrl}}/api/accounts/{{accountNumber}}/deposit" } },
+    { "name": "Withdraw", "request": { "method": "POST", "auth": { "type": "basic", "basic": [{ "key": "username", "value": "{{email}}", "type": "string" }, { "key": "password", "value": "{{password}}", "type": "string" }] }, "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"amount\": 25.00\n}" }, "url": "{{baseUrl}}/api/accounts/{{accountNumber}}/withdraw" } },
+    { "name": "Transfer", "request": { "method": "POST", "auth": { "type": "basic", "basic": [{ "key": "username", "value": "{{email}}", "type": "string" }, { "key": "password", "value": "{{password}}", "type": "string" }] }, "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"senderAccountNumber\": \"AC001\",\n  \"receiverAccountNumber\": \"AC002\",\n  \"amount\": 50.00\n}" }, "url": "{{baseUrl}}/api/transfers" } },
+    { "name": "Transactions", "request": { "method": "GET", "auth": { "type": "basic", "basic": [{ "key": "username", "value": "{{email}}", "type": "string" }, { "key": "password", "value": "{{password}}", "type": "string" }] }, "url": "{{baseUrl}}/api/transactions/my/{{accountNumber}}" } },
+    { "name": "List beneficiaries", "request": { "method": "GET", "auth": { "type": "basic", "basic": [{ "key": "username", "value": "{{email}}", "type": "string" }, { "key": "password", "value": "{{password}}", "type": "string" }] }, "url": "{{baseUrl}}/api/beneficiaries/my" } },
+    { "name": "Add beneficiary", "request": { "method": "POST", "auth": { "type": "basic", "basic": [{ "key": "username", "value": "{{email}}", "type": "string" }, { "key": "password", "value": "{{password}}", "type": "string" }] }, "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Jane Doe\",\n  \"accountNumber\": \"AC002\",\n  \"bankName\": \"Harbor Bank\"\n}" }, "url": "{{baseUrl}}/api/beneficiaries" } },
+    { "name": "Delete beneficiary", "request": { "method": "DELETE", "auth": { "type": "basic", "basic": [{ "key": "username", "value": "{{email}}", "type": "string" }, { "key": "password", "value": "{{password}}", "type": "string" }] }, "url": "{{baseUrl}}/api/beneficiaries/{{beneficiaryId}}" } },
+    { "name": "Admin users", "request": { "method": "GET", "auth": { "type": "basic", "basic": [{ "key": "username", "value": "{{email}}", "type": "string" }, { "key": "password", "value": "{{password}}", "type": "string" }] }, "url": "{{baseUrl}}/api/admin/users" } },
+    { "name": "Admin accounts", "request": { "method": "GET", "auth": { "type": "basic", "basic": [{ "key": "username", "value": "{{email}}", "type": "string" }, { "key": "password", "value": "{{password}}", "type": "string" }] }, "url": "{{baseUrl}}/api/admin/accounts" } },
+    { "name": "Admin transactions", "request": { "method": "GET", "auth": { "type": "basic", "basic": [{ "key": "username", "value": "{{email}}", "type": "string" }, { "key": "password", "value": "{{password}}", "type": "string" }] }, "url": "{{baseUrl}}/api/admin/transactions" } },
+    { "name": "Freeze account", "request": { "method": "PATCH", "auth": { "type": "basic", "basic": [{ "key": "username", "value": "{{email}}", "type": "string" }, { "key": "password", "value": "{{password}}", "type": "string" }] }, "url": "{{baseUrl}}/api/admin/accounts/{{accountNumber}}/freeze" } },
+    { "name": "Unfreeze account", "request": { "method": "PATCH", "auth": { "type": "basic", "basic": [{ "key": "username", "value": "{{email}}", "type": "string" }, { "key": "password", "value": "{{password}}", "type": "string" }] }, "url": "{{baseUrl}}/api/admin/accounts/{{accountNumber}}/unfreeze" } }
+  ]
+}

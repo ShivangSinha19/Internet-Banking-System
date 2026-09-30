@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This repository contains a Core Java internet banking application with an in-memory mode and an optional JDBC/MySQL persistence mode. Spring Boot and React are not part of this phase.
+This repository contains an Internet Banking System with a Spring Boot REST backend, a React/Vite frontend, and the original Core Java/JDBC implementation preserved for reference and compatibility.
 
 ## Features
 
@@ -17,7 +17,7 @@ This repository contains a Core Java internet banking application with an in-mem
 
 ## Tech Stack
 
-Java, OOP, collections, checked exceptions, `BigDecimal`, and `LocalDateTime`.
+Java 25, Spring Boot 4.1.1, Spring Web, Spring Data JPA, Hibernate, Spring Security HTTP Basic, BCrypt, MySQL, Maven, React, Vite, TypeScript, Axios, and React Router.
 
 ## Architecture
 
@@ -33,11 +33,17 @@ The JDBC-ready services use:
 Main -> Service -> DAO -> JDBC -> MySQL
 ```
 
+The current REST application uses:
+
+```text
+React/Vite -> Axios -> Spring Boot REST Controllers -> Services -> Spring Data JPA -> Hibernate -> MySQL
+```
+
 SQL is contained in `com.banking.dao.jdbc`. `DatabaseConnection` reads `DB_URL`, `DB_USERNAME`, and `DB_PASSWORD` from environment variables or JVM system properties.
 
 ## Project Structure
 
-The existing `com.banking` package structure is preserved under `src/main/java`. Custom exceptions are in `exception`, state is in `model`, and business logic is in `service`. Tests are under `src/test/java`.
+The existing `com.banking` package structure is preserved under `src/main/java`. The Spring Boot API is organized into `controller`, `service`, `repository`, `entity`, `dto`, `security`, `config`, and `exception`. The older `model`, `dao`, and JDBC services remain under their original packages. The frontend lives separately under `frontend/src`.
 
 ## Core Java Version
 
@@ -81,11 +87,53 @@ JDBC user credentials are stored as PBKDF2-derived values by the JDBC service pa
 
 Live MySQL integration has not been verified in this environment. `mvn clean test` runs offline tests only and does not claim database connectivity.
 
+## Spring Boot Backend
+
+Set `DB_URL`, `DB_USERNAME`, and `DB_PASSWORD` in the process environment. Spring Boot does not automatically load `.env` files. The application uses `spring.jpa.hibernate.ddl-auto=validate` and never creates or drops the existing schema.
+
+Start the backend from the repository root:
+
+```powershell
+mvn spring-boot:run
+```
+
+The API runs at `http://localhost:8080`.
+
+Authentication uses HTTP Basic. Registration and login accept JSON. After login, clients send the email and password through the Basic Authorization header for protected requests. The React client keeps this authentication in memory and never stores the password in local storage.
+
+## React Frontend
+
+Configure the API URL in `frontend/.env` using [frontend/.env.example](frontend/.env.example), then run:
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend runs at `http://localhost:5173`. Build it with `npm run build`.
+
+Customer routes cover the dashboard, accounts, deposits, withdrawals, transfers, transaction history, beneficiaries, and profile. Admin routes cover users, accounts, transactions, and account freeze/unfreeze operations.
+
+## REST API Endpoints
+
+Authentication: `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me`
+
+Accounts: `POST /api/accounts`, `GET /api/accounts/my`, `GET /api/accounts/{accountNumber}`, `POST /api/accounts/{accountNumber}/deposit`, `POST /api/accounts/{accountNumber}/withdraw`
+
+Transfers and history: `POST /api/transfers`, `GET /api/transactions/my/{accountNumber}`
+
+Beneficiaries: `POST /api/beneficiaries`, `GET /api/beneficiaries/my`, `DELETE /api/beneficiaries/{beneficiaryId}`
+
+Admin: `GET /api/admin/users`, `GET /api/admin/accounts`, `GET /api/admin/transactions`, `PATCH /api/admin/accounts/{accountNumber}/freeze`, `PATCH /api/admin/accounts/{accountNumber}/unfreeze`
+
+An importable request set is available at [postman/internet-banking.postman_collection.json](postman/internet-banking.postman_collection.json).
+
 ## Testing
 
-The project includes 11 JUnit 5 tests covering registration, duplicate registration, login success/failure, account creation, deposit, withdrawal, insufficient balance, transfer, same-account transfer rejection, and frozen-account rejection. Run them with `mvn clean test`. Live database tests should be added separately once a configured MySQL instance is available.
+The project includes 22 tests covering the original Core Java behavior, REST service behavior, transfer ownership rules, and Spring web wiring. Run the backend tests with `mvn clean test`. Build the frontend with `cd frontend; npm run build`.
 
 ## Future Improvements
 
-- Add the Spring Boot API with DTOs, validation, BCrypt password hashing, and role-based authorization.
-- Add the requested ER diagram image after choosing a diagram generation tool.
+- Add integration tests against a dedicated test MySQL database.
+- Add a production deployment profile and secret manager integration.
